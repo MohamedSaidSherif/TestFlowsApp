@@ -2,11 +2,13 @@ package com.android.testflowsapp
 
 import app.cash.turbine.test
 import com.google.common.truth.Truth.assertThat
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
 import org.junit.Before
 import org.junit.Test
 
+@OptIn(ExperimentalCoroutinesApi::class)
 class MainActivityViewModelTest {
 
     private lateinit var viewModel: MainActivityViewModel
@@ -22,7 +24,10 @@ class MainActivityViewModelTest {
     fun `countDownFlow, properly counts down from 5 to 0`() = runBlocking {
         viewModel.countDownFlow.test {
             for (i in 5 downTo 0) {
-                testDispatchers.testDispatcher.advanceTimeBy(1000L)
+                testDispatchers.testDispatcher.scheduler.apply {
+                    advanceTimeBy(1000L)
+                    runCurrent()
+                }
                 val emission = awaitItem()
                 assertThat(emission).isEqualTo(i)
             }

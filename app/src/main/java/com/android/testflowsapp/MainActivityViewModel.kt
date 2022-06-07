@@ -7,7 +7,7 @@ import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
 
 class MainActivityViewModel(
-    private val dispatcherProvider: DispatcherProvider
+    private val dispatcherProvider: DispatcherProvider = DefaultDispatchers()
 ) : ViewModel() {
 
     private val _stateFlow = MutableStateFlow(0)
